@@ -9,7 +9,11 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var cors = require('cors');
 var config = require('./config/database');
-
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+});
 mongoose.connect(config.database, { useCreateIndex: true, useNewUrlParser: true });
 
 var api = require('./routes/api');
@@ -35,7 +39,18 @@ app.use(passport.initialize());
 app.get('/', function(req, res) {
   res.send('Page under construction.');
 });
-
+.get('/db', async (req, res) => {
+    try {
+      const client = await pool.connect()
+      const result = await client.query('SELECT * FROM test_table');
+      const results = { 'results': (result) ? result.rows : null};
+      res.render('pages/db', results );
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  })
 app.use('/api', api);
 
 // catch 404 and forward to error handler
