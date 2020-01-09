@@ -104,7 +104,7 @@ router.get('/get_hotels_all',(req,res) =>{
 
 router.post('/get_menu',(req,res) =>{
   db.collection('menus',function(err,collection){
-    let idq = (Number)(req.body.id);
+    let idq = (String)(req.body.id);
     collection.find({id:idq}).project({_id:0, id:0, _v:0 }).toArray(function(err,data){
       let obj = {};
       console.log(data);
@@ -115,8 +115,7 @@ router.post('/get_menu',(req,res) =>{
 });
 
 router.post('/get_menu1',(req,res) =>{
-  var MongoClient = require('mongodb').MongoClient;
-  MongoClient.connect(dburl,function(err,client){
+  mongoClient.connect(dburl,function(err,client){
     if(err) throw err;
     var dbq = client.db('heroku_x63r6jt7');
     dbq.collection('menus',function(err,collection){
