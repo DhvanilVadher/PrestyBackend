@@ -125,8 +125,10 @@ router.post('/get_menu1',(req,res) =>{
         console.log(data);
         obj.Stuff = data;
         res.json(obj);
-    })
+      })
+    });
   });
+});
 router.post('/add_menu',(req,res) =>{
   let newMenu = new Menu(req.body);
   newMenu.save().then(item =>{
