@@ -102,20 +102,6 @@ router.get('/get_hotels_all',(req,res) =>{
   });
 });
 
-// router.post('/get_menu_veg',(req,res) =>{
-//   db.collection('menus',function(err,collection){
-//     let idq = (Number)(req.body.id);
-//     const i = true;
-//     collection.find({id:idq}).project({_id:0, id:0, _v:0 }).toArray(function(err,data){
-//       let obj = {};
-//       console.log(data);
-//       obj.Stuff = data;
-//       res.json(obj);
-//     })
-//   });
-// });
-
-
 router.post('/get_menu',(req,res) =>{
   db.collection('menus',function(err,collection){
     let idq = (Number)(req.body.id);
@@ -128,7 +114,19 @@ router.post('/get_menu',(req,res) =>{
   });
 });
 
-
+router.post('/get_menu1',(req,res) =>{
+  MongoClient.connect(dburl,function(err,client){
+    if(err) throw err;
+    var dbq = client.db('heroku_x63r6jt7');
+    dbq.collection('menus',function(err,collection){
+      let idq = (Number)(req.body.id);
+      collection.find({id:idq}).project({_id:0, id:0, _v:0 }).toArray(function(err,data){
+        let obj = {};
+        console.log(data);
+        obj.Stuff = data;
+        res.json(obj);
+    })
+  });
 router.post('/add_menu',(req,res) =>{
   let newMenu = new Menu(req.body);
   newMenu.save().then(item =>{
